@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link href="style.css" rel="stylesheet" type="text/css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://kit.fontawesome.com/5d38fb97c4.js" crossorigin="anonymous"></script>
+    <script src="mainToDo.js"></script>
+</head>
+<body>
+    <div id="mainContainer" class="container-fluid">
+        <div id="topHeaderBar" class="row bg-dark p-2">
+            <div class="col-12 d-inline-flex align-items-center gap-3">
+                <h2 class="flex-grow-1 ">ListTime</h2>
+                <i class="fa-solid fa-gear"></i>
+                <i class="fa-regular fa-circle-user"></i>
+            </div>
+        </div>
+        <div id="mainTaskContainer" class="row h-100">
+            <div id="listsContainer" class="col-sm-3 col-md-3 col-lg-3 bg-light pt-3">
+                <input id="taskInputDOM" type="text" class="w-100" placeholder="Enter New List Name"></input><!--onkeydown="createToDoList()"-->
+                <button type="submit" class=""id="toDoSubmitButton" onclick="createToDoList()"><i class="fa-solid fa-plus"></i></button>
+                <div id="listsDisplayDOM">
+                    <!--displaying in list names-->
+                </div>
+            </div>
+            <div class="col bg-primary-subtle">
+                <div class="container">
+                    <div id="toDoListTitle" class="p-2">
+                        <!--printing out current todolist name-->
+                    </div>
+                    <div id="toDoListItemsDisplay">
+                        <!--displaying todo display-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+
+</html>

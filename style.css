@@ -1,0 +1,19 @@
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    font-family: 'Raleway', sans-serif;
+    background-color: black;
+    color: white;
+}
+#mainContainer {
+    height: 100%;
+    
+}
+i {
+    font-size: 20px;
+}
+#mainTaskContainer {
+    color: black;
+}
