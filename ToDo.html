@@ -23,7 +23,7 @@
         </div>
         <div id="mainTaskContainer" class="row h-100">
             <div id="listsContainer" class="col-sm-3 col-md-3 col-lg-3 bg-light pt-3">
-                <input id="taskInputDOM" type="text" class="w-100" placeholder="Enter New List Name"></input><!--onkeydown="createToDoList()"-->
+                <input id="taskInputDOM" type="text" class="w-100" onkeydown="listInputEnter(event)" placeholder="Enter New List Name"></input><!--onkeydown="createToDoList()"-->
                 <button type="submit" class=""id="toDoSubmitButton" onclick="createToDoList()"><i class="fa-solid fa-plus"></i></button>
                 <div id="listsDisplayDOM">
                     <!--displaying in list names-->
@@ -32,10 +32,17 @@
             <div class="col bg-primary-subtle">
                 <div class="container">
                     <div id="toDoListTitle" class="p-2">
-                        <!--printing out current todolist name-->
                     </div>
+                    <input type="text" id="createNewTodoDOM"> <button type="submit" class=""id="toDoSubmitButton" onclick="createToDo()"><i class="fa-solid fa-plus"></i></button>
                     <div id="toDoListItemsDisplay">
+                       
                         <!--displaying todo display-->
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                
+                            </i>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

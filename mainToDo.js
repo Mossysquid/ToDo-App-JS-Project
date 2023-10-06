@@ -30,68 +30,101 @@ class Todolist {
         this.todos = [];
     }
 }
+// creating list
 function createToDoList() {
-    const name = document.getElementById('taskInputDOM').value;
-
-    if(name === '') {
-      alert('Please Enter a List Name')
-    }
-    else{
+  const name = document.getElementById('taskInputDOM').value;
+  
+  if(name === '') {
+    alert('Please Enter a List Name')
+  }
+  else{
     const newTodoList = new Todolist(name);
     allLists.push(newTodoList);
     render();
-    document.getElementById(newTodoList.id).addEventListener('click', function(e)
-    {
-      console.log(getTodolistById(e.target.id))
-    })
-     // Update the list of to-do lists
-     clearInput(); // Clear the input field
-    }
+    clearInput(); 
+    return newTodoList;
   }
+}
+// creating todos
+function createToDo(){
+ let currentListOfTodos = currentListSelected.todos;
+ let textInput = document.getElementById('createNewTodoDOM').value;
+if(textInput === ''){
+  alert('please enter a name for the todo')
+} else{
+ const newTodo = {
+  id: generateSecureRandomId(),
+  text: textInput,
+  completed: false
+}
+currentListOfTodos.push(newTodo);
+}
+render()
+clearInput();
+// create the todo template, fill in the info, then print all todo lists on screen. each individual todo is in own list
+// select individual todo, set it = to selectedToDo
+// create functions for todo
+
+}
+function listInputEnter(event) {
+  if (event.keyCode === 13 ) {
+      if(event.target === document.getElementById('taskInputDOM')){createToDoList()} 
+      else {
+        createToDo();
+      } 
+  }};
+let currentListSelected = {}
+function targetCurrentList() {
+  let items = document.querySelectorAll('.individualTodoList');
+  items.forEach(newTodoList => {
+    newTodoList.addEventListener('click', function(e) {
+      currentListSelected = getTodolistById(e.target.id);
+      render(); // Call render only when needed
+    });
+  });
+}
 
 
-
-// get a Todolist by its ID
 function getTodolistById(listId) {
   return allLists.find(list => list.id === listId);
 }
 
-function currentList () {
-  let currentListSelected =document.eventListener('click')
-  console.log(currentListSelected)
-  return currentListSelected;
+function deleteCurrentTodo(){
+
 }
-
-// let currentId = currentListSelected.id; //FIXME: Replace with the ID you want to find
-// const desiredList = getTodolistById(current);
-
-// if (desiredList) {
-//   // You've found the desired Todolist
-//   console.log(`Found Todolist with ID ${currentId}: ${desiredList.name}`);
-//   // You can access its properties and methods here, e.g., desiredList.name
-// } else {
-//   console.log(`Todolist with ID ${desiredListId} not found.`);
-// }
-
 function render() {
- let listDisplay = '<ul class="list-group">';
- allLists.forEach((Todolist) => {
-   listDisplay += `<li class="list-group-item" id="${Todolist.id}">${Todolist.name}</li>`;
+  let listDisplay = '<ul class="list-group">';
+  allLists.forEach((Todolist) => {
+    listDisplay += `<li class="list-group-item individualTodoList" id="${Todolist.id}">${Todolist.name}</li>`;
   });
   listDisplay += '</ul>';
   document.getElementById('listsDisplayDOM').innerHTML = listDisplay;
 
-    // need to grab the current list name 
-    //grap the todolist Title element
-    // set the todo list name = to the element
-    // render that element
-    // let currentTitleofList = currentListSelected
-}
- function listCreateListener() {
+  // Set currentListSelected based on user's click
+  targetCurrentList();
 
+  // Check if currentListSelected is defined and has a todos property
+  const currentListTodos = currentListSelected ? currentListSelected.todos : [];
+
+  // Initialize todoListDisplay
+  let todoListDisplay = '<ul class="list-group">';
+
+  // Iterate through currentListTodos
+  currentListTodos.forEach((object) => {
+    todoListDisplay += `<li class="list-group-item individualTodoList" id="${object.id}">${object.text}</li>`;
+  });
+
+  todoListDisplay += '</ul>';
+  document.getElementById('toDoListItemsDisplay').innerHTML = todoListDisplay;
+
+  console.log('the render function happened');
+  console.log('currentListSelected')
 }
+
+
 function clearInput() {
     document.getElementById('taskInputDOM').value = '';
+    document.getElementById('createNewTodoDOM').value = '';
   }
   
   //random id generator 
@@ -110,7 +143,7 @@ function clearInput() {
 
 
 
-
+// document.addEventListener('click',render())
 //render function
 
 
