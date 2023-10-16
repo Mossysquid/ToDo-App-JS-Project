@@ -40,6 +40,8 @@ function createToDoList() {
   else{
     const newTodoList = new Todolist(name);
     allLists.push(newTodoList);
+    currentListSelected = newTodoList;
+    save ();
     render();
     clearInput(); 
     return newTodoList;
@@ -49,6 +51,7 @@ function createToDoList() {
 function createToDo(){
  let currentListOfTodos = currentListSelected.todos;
  let textInput = document.getElementById('createNewTodoDOM').value;
+ if(currentListOfTodos) {
 if(textInput === ''){
   alert('please enter a name for the todo')
 } else{
@@ -61,10 +64,9 @@ currentListOfTodos.push(newTodo);
 }
 render()
 clearInput();
-// create the todo template, fill in the info, then print all todo lists on screen. each individual todo is in own list
-// select individual todo, set it = to selectedToDo
-// create functions for todo
-
+} else {
+  alert('Please Create a List First');
+}
 }
 function listInputEnter(event) {
   if (event.keyCode === 13 ) {
@@ -73,60 +75,163 @@ function listInputEnter(event) {
         createToDo();
       } 
   }};
-let currentListSelected = {}
+var currentListSelected = {}
+let buttonClicked = false;
 function targetCurrentList() {
   let items = document.querySelectorAll('.individualTodoList');
   items.forEach(newTodoList => {
-    newTodoList.addEventListener('click', function(e) {
-      currentListSelected = getTodolistById(e.target.id);
-      render(); // Call render only when needed
+      newTodoList.addEventListener('click', function(e) {
+      currentListSelected = getTodolistById(e.target.id); 
+      if(!buttonClicked) {
+        save ()
+        render();
+      }
     });
-  });
-}
+    })
+  };
+  
+
+
 
 
 function getTodolistById(listId) {
   return allLists.find(list => list.id === listId);
 }
 
-function deleteCurrentTodo(){
-
+function deleteCurrentTodo(todoId) {
+  if (currentListSelected && currentListSelected.todos) {
+    //trying to add an animation class
+    const domCurrentTodo = document.getElementById(todoId)
+    domCurrentTodo.classList.add('animate__animated');
+    domCurrentTodo.classList.add('animate__bounce');
+    currentListSelected.todos = currentListSelected.todos.filter(todo => todo.id !== todoId);
+    save ()
+    render();
+  }
 }
-function render() {
-  let listDisplay = '<ul class="list-group">';
-  allLists.forEach((Todolist) => {
-    listDisplay += `<li class="list-group-item individualTodoList" id="${Todolist.id}">${Todolist.name}</li>`;
-  });
-  listDisplay += '</ul>';
-  document.getElementById('listsDisplayDOM').innerHTML = listDisplay;
+function deleteCurrentList(){
+  if (currentListSelected) {
+    const listIndex = allLists.findIndex(list => list.id === currentListSelected.id);
 
-  // Set currentListSelected based on user's click
-  targetCurrentList();
-
-  // Check if currentListSelected is defined and has a todos property
-  const currentListTodos = currentListSelected ? currentListSelected.todos : [];
-
-  // Initialize todoListDisplay
-  let todoListDisplay = '<ul class="list-group">';
-
-  // Iterate through currentListTodos
-  currentListTodos.forEach((object) => {
-    todoListDisplay += `<li class="list-group-item individualTodoList" id="${object.id}">${object.text}</li>`;
-  });
-
-  todoListDisplay += '</ul>';
-  document.getElementById('toDoListItemsDisplay').innerHTML = todoListDisplay;
-
-  console.log('the render function happened');
-  console.log('currentListSelected')
+    if (listIndex !== -1) {
+      allLists.splice(listIndex, 1);
+      currentListSelected = {};
+      removeTitle();
+      save ();
+      render();
+    }
+  }
 }
+function deleteAllCompletedTodos() {
+  if (currentListSelected && currentListSelected.todos) {
+    currentListSelected.todos = currentListSelected.todos.filter(todo => !todo.completed);
+    save ()
+    render();
+  }
+}
+function editListTitle(todoId) {
+const editTitleInput = document.getElementById(`editTitleInput-${todoId}`)
+const replaceTitleText = document.getElementById(`replaceTitle-${todoId}`)
+editTitleInput.style.display = 'inline';
+replaceTitleText.style.display ='none';
+buttonClicked = true;
+};
+function updateListTitle(listId, event) {
+  if(event.keyCode === 13) {
+    const editListInput = document.getElementById(`editTitleInput-${listId}`)
+    editListInput.style.display = 'none';
+   const currentList = allLists.find(list => list.id === listId)
+    currentList.name = editListInput.value
+    buttonClicked = false;
+    currentListSelected = currentList;
+    save ()
+    render();
+}
+};
 
-
+ function editTodoName(todoId) {
+const editInput = document.getElementById(`editInput-${todoId}`)
+const replaceText = document.getElementById(`replace-${todoId}`)
+editInput.style.display = 'inline';
+replaceText.style.display ='none';
+editInput.value = replaceText.textContent;
+};
+function updateTodoName(todoId, event) {
+ if(event.keyCode === 13) {
+  const editInput = document.getElementById(`editInput-${todoId}`)
+  editInput.style.display = 'none';
+ const currentTodo = currentListSelected.todos.find(todoItem => todoItem.id === todoId)
+  currentTodo.text = editInput.value
+  save ()
+ render();
+ }
+};
+function checkbox() {
+   if(currentListSelected && currentListSelected.todos) {
+  currentListSelected.todos.forEach((todo) => {
+    const currentCheck = document.getElementById(`check-${todo.id}`);
+    if(currentCheck != null){
+    currentCheck.addEventListener('change', function () {
+     todo.completed = currentCheck.checked 
+     save ()
+        });
+  };})}};
+  
+  function render() {
+    
+    let listDisplay = '<ul class="list-group">';
+    allLists.forEach((Todolist) => {
+      listDisplay += `<li class="list-group-item individualTodoList d-flex justify-content-between" id="${Todolist.id}">
+      <span id="replaceTitle-${Todolist.id}">${Todolist.name}</span>
+      <input type="text" id="editTitleInput-${Todolist.id}" class="edit-input" onkeydown=" updateListTitle('${Todolist.id}',event)">
+      <span><i onclick="deleteCurrentList()" class="fa-solid fa-trash"></i>
+      <i onclick="editListTitle('${Todolist.id}')" class="fa-regular fa-pen-to-square listEditButton"></i></span></li>`;
+    });
+    listDisplay += '</ul>';
+    document.getElementById('listsDisplayDOM').innerHTML = listDisplay;
+    
+    // Check if currentListSelected is defined and has a todos property
+    const currentListTodos = currentListSelected ? currentListSelected.todos : [];
+    
+    // Initialize todoListDisplay
+    let todoListDisplay = '<ul class="list-group">';
+    
+    // Iterate through currentListTodos
+    if (currentListTodos) {
+      currentListTodos.forEach((object) => {
+        todoListDisplay += `<li class="list-group-item individualTodoList d-flex justify-content-around p-2" id="${object.id}">
+            <input type="checkbox" id="${'check-' + object.id}" ${object.completed ? 'checked' : ''}>
+            <span id="replace-${object.id}">${object.text}</span>
+            <input type="text" id="editInput-${object.id}" class="edit-input" onkeydown="updateTodoName('${object.id}', event)">
+            <span>
+            <i onclick="deleteCurrentTodo('${object.id}')" class="fa-solid fa-trash"></i>
+            <i onclick="editTodoName('${object.id}')" class="fa-regular fa-pen-to-square"></i></span>
+        </li>`;
+      });
+      todoListDisplay += '</ul>';
+    }
+    
+    // Clear existing todo list items display
+    document.getElementById('toDoListItemsDisplay').innerHTML = '';
+    targetCurrentList();
+    // Render the updated todo list
+    document.getElementById('toDoListItemsDisplay').innerHTML = todoListDisplay;
+    
+    if (currentListSelected && currentListSelected.name) {
+      const titleDisplay = document.getElementById('toDoListTitle');
+      titleDisplay.innerHTML = currentListSelected.name;
+    }
+    checkbox();
+    save ()
+  }
+  
 function clearInput() {
     document.getElementById('taskInputDOM').value = '';
     document.getElementById('createNewTodoDOM').value = '';
   }
-  
+  function removeTitle(){
+    document.getElementById('toDoListTitle').innerHTML = '';
+  }
   //random id generator 
   function generateSecureRandomId() {
     const length = 200;
@@ -139,88 +244,26 @@ function clearInput() {
     
     return randomChars.join('');
   }
-  
-
-
-
-// document.addEventListener('click',render())
-//render function
-
-
-
-
-
-
-
-
-
-
-
-
-//I want to have a selected list function. I want its id stored as the current id
-// then I want to call the render function inside the selected list function. 
-// render function will display the todos and name of list.
-
-
-
-  // 
-   
-/* remove list function
-- make icon next to todos and lists
-when list is clicked add an onclick to run remove function
-then remove function should be currenttodo.remove,
-or if list currentlist.remove
-*/
-
-/*
-create todo function
--
-
-function addTodo() {
- // get the todo text from the todo input box
- const text = document.getElementById('todo-input-box').value;
- if(text) {
-   currentList.todos.push({
-     text: text,
-     completed: false
-   })
-   render();
- }
+function load (){
+const saveLists = JSON.parse(localStorage.getItem('allLists'));
+const savedCurrentList = JSON.parse(localStorage.getItem('currentListSelected'));
+if(saveLists) {
+  allLists.legth = 0;
+  allLists.push(...saveLists);
 }
-*/
-
-/* mark Todo as complete
--when box is checked add eventlistener for checked box.
-then run function mark todo as complete.
-this will change the checked boxes checked to true. use event.target to target the same object that was checked.
-*/
-/*remove all todos I want to create a trash icon by the name.
-this will remove all todos in the list by clearing the array of todos.
-
-*/
-
+if (savedCurrentList) {
+  currentListSelected = allLists.find(list => list.id === savedCurrentList.id)
+}
+render();
+}
+function save () {
+localStorage.setItem('currentListSelected', JSON.stringify(currentListSelected))
+localStorage.setItem('allLists', JSON.stringify(allLists))
+}
+window.addEventListener('load',load());
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-  // function getObjectById(allLists, targetId) {
-  //   for (let i = 0; i < allLists.length; i++) {
-  //     if (allLists[i].id === targetId) {
-  //       let currentList = allLists[i]
-  //       return currentList; // Return the object with the matching id
-  //     }
-  //   }
-  //   return null; // Return null if no object with the specified id is found
-  // }
- 

@@ -10,40 +10,45 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://kit.fontawesome.com/5d38fb97c4.js" crossorigin="anonymous"></script>
-    <script src="mainToDo.js"></script>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+    <script src="mainToDo.js" defer></script>
 </head>
 <body>
-    <div id="mainContainer" class="container-fluid">
+    <div id="mainContainer" class="container-fluid vh-100">
         <div id="topHeaderBar" class="row bg-dark p-2">
             <div class="col-12 d-inline-flex align-items-center gap-3">
                 <h2 class="flex-grow-1 ">ListTime</h2>
                 <i class="fa-solid fa-gear"></i>
                 <i class="fa-regular fa-circle-user"></i>
+                <input type="checkbox">
             </div>
         </div>
         <div id="mainTaskContainer" class="row h-100">
             <div id="listsContainer" class="col-sm-3 col-md-3 col-lg-3 bg-light pt-3">
                 <input id="taskInputDOM" type="text" class="w-100" onkeydown="listInputEnter(event)" placeholder="Enter New List Name"></input><!--onkeydown="createToDoList()"-->
-                <button type="submit" class=""id="toDoSubmitButton" onclick="createToDoList()"><i class="fa-solid fa-plus"></i></button>
                 <div id="listsDisplayDOM">
                     <!--displaying in list names-->
                 </div>
             </div>
             <div class="col bg-primary-subtle">
                 <div class="container">
-                    <div id="toDoListTitle" class="p-2">
+                    <div id="toDoListTitle" class="p-2 h2">
                     </div>
-                    <input type="text" id="createNewTodoDOM"> <button type="submit" class=""id="toDoSubmitButton" onclick="createToDo()"><i class="fa-solid fa-plus"></i></button>
-                    <div id="toDoListItemsDisplay">
+                     
+                    <div class="d-flex justify-content-between ">
+                    <span>
+                    <input type="text" id="createNewTodoDOM" onkeydown="listInputEnter(event)"> 
+                    </span>
+                    <button class="bg-danger text-white"type="reset" id="deleteAll" onclick="deleteAllCompletedTodos()">Delete All Completed Todos</button>
+                    </div>
+                    <div id="toDoListItemsDisplay" class = "bg-transparent">
                        
                         <!--displaying todo display-->
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                
-                            </i>
-                            </li>
-                        </ul>
                     </div>
+                    
                 </div>
             </div>
         </div>
