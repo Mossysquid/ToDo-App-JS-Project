@@ -89,11 +89,6 @@ function targetCurrentList() {
     });
     })
   };
-  
-
-
-
-
 function getTodolistById(listId) {
   return allLists.find(list => list.id === listId);
 }
